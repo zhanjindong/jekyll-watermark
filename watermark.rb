@@ -7,7 +7,7 @@ module Jekyll
     priority :low
 
     def generate(site)
-      Dir.glob('_photos/**/*').each do |file|
+      Dir.glob('assets/images/original/**/*').each do |file|
         path = destination_path(file)
         if (File.file?(file))
           watermark_image(site, file, path)
@@ -26,7 +26,7 @@ module Jekyll
 
     def destination_path(file)
       new_file = String.new(file)
-      new_file["_photos"] = "photos"
+      new_file["assets/images/original"] = "assets/images/posts"
       FileUtils.mkdir_p(File.dirname(new_file))
       new_file
     end
@@ -36,7 +36,7 @@ module Jekyll
         return
       end
       image = MiniMagick::Image.open(file)
-      result = image.composite(MiniMagick::Image.open('img/watermark-large.png')) do |c|
+      result = image.composite(MiniMagick::Image.open('assets/images/watermark-large.png')) do |c|
         c.gravity "southeast"
       end
       result.write new_file
@@ -64,7 +64,7 @@ module Jekyll
       hoffset = (image["height"] - height) / 2
       image.gravity('Center')
       image.crop "#{width}x#{height}+#{woffset}+#{hoffset}"
-      result = image.composite(MiniMagick::Image.open('img/watermark-small.png')) do |c|
+      result = image.composite(MiniMagick::Image.open('assets/images/watermark-small.png')) do |c|
         c.gravity "southeast"
       end
       result.write thumb_file
